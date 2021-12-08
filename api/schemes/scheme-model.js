@@ -1,7 +1,15 @@
+const database = require("../../data/db-config");
+
 function find() { // EXERCISE A
+  return database("schemes as sch")
+    .select("sch.*")
+    .leftJoin("steps as st", "sch.scheme_id", "st.scheme_id")
+    .count("st.step_id as number_of_steps")
+    .groupBy("sch.scheme_id");
   /*
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
     What happens if we change from a LEFT join to an INNER join?
+        ANSWER: If INNER JOIN is used instead of LEFT JOIN, row 7 gets removed
 
       SELECT
           sc.*,
