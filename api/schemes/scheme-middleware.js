@@ -58,8 +58,21 @@ const validateScheme = async (req, res, next) => {
     "message": "invalid step"
   }
 */
-const validateStep = (req, res, next) => {
+const validateStep = async (req, res, next) => {
+  try {
+    const { instructions, step_number } = req.body
 
+    if( !instructions || instructions === "" || typeof instructions !== "string" ||
+      step_number < 1 || typeof step_number !== "number") {
+        next( { status: 400, message: "invalid step" } )
+
+    } else {
+      next();
+    }
+
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {
