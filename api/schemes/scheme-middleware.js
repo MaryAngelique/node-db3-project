@@ -10,7 +10,18 @@ const Scheme = require("./scheme-model");
 const checkSchemeId = async (req, res, next) => {
   try {
     const { id } = req.params.id
-    const scheme 
+    const scheme = await Scheme.findById(id);
+
+    if(!scheme) {
+      next( { status: 404, message: `scheme with scheme_id ${id} not found` } )
+
+    } else {
+      req.scheme = scheme;
+      next();
+    }
+
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -22,8 +33,20 @@ const checkSchemeId = async (req, res, next) => {
     "message": "invalid scheme_name"
   }
 */
-const validateScheme = (req, res, next) => {
+const validateScheme = async (req, res, next) => {
+  try {
+    const { scheme_name } = req.body
+    
+    if ( !scheme_name || scheme_name === "" || typeof scheme_name !== "string" ) {
+      next( { status: 400, message: "invalid scheme_name" } );
 
+    } else {
+      next();
+    }
+
+  } catch (error) {
+    next(error);
+  }
 }
 
 /*
