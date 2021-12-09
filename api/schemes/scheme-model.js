@@ -33,7 +33,7 @@ async function findById(scheme_id) { // EXERCISE B
   .orderBy('st.step_number')
 
   const result ={
-    scheme_id: rows[0].scheme_id,
+    scheme_id: Number(scheme_id),
     scheme_name: rows[0].scheme_name,
     steps: []
   }
@@ -172,6 +172,14 @@ async function add(scheme) { // EXERCISE D
 }
 
 function addStep(scheme_id, step) { // EXERCISE E
+  return database("steps").insert( { ...step, scheme_id } )
+    .then(() => {
+      return database("steps as st")
+        .join("schemes as sc", "sc.scheme_id", "st.scheme_id")
+        .select("step_id", "step_number", "instructions", "scheme_name")
+        .orderBy("step_number")
+        .where("sc.scheme_id", scheme_id);
+    })
   /*
     1E- This function adds a step to the scheme with the given `scheme_id`
     and resolves to _all the steps_ belonging to the given `scheme_id`,
