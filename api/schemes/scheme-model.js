@@ -135,7 +135,7 @@ async function findSteps(scheme_id) { // EXERCISE C
 
   } else {
     return [];
-    
+
   }
   /*
     1C- Build a query in Knex that returns the following data.
@@ -159,7 +159,13 @@ async function findSteps(scheme_id) { // EXERCISE C
   */
 }
 
-function add(scheme) { // EXERCISE D
+async function add(scheme) { // EXERCISE D
+  const [ scheme_id ] = await database("schemes").insert(scheme);
+  const newScheme = await database("schemes")
+    .where("scheme_id", scheme_id)
+    .first();
+
+  return newScheme;
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
